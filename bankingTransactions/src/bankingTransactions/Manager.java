@@ -11,7 +11,9 @@ public class Manager {
 	public static void main(String[] args) {
 		
 		
-		JLabel masterLabel, balanceLabel;
+		JLabel masterLabel, balanceLabel, name,
+			   accountNum, relatedAccs, lastname;
+		
 		JTextField entry;
 		JButton deposit, withdraw;
 		
@@ -21,15 +23,20 @@ public class Manager {
 		
 		JFrame frame = new JFrame("Basic Account Management");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(250, 200);
-		frame.setLayout(new GridLayout(4,1));
-		frame.setSize(300, 150);
+		frame.setLayout(new GridLayout(5,1));
+		frame.setSize(400, 200);
 		
 		masterLabel = new JLabel("Deposit/Withdraw");
 		balanceLabel = new JLabel("Balance: $" + customer.getAccountBalance());
 		entry = new JTextField();
 		deposit = new JButton("Deposit");
 		withdraw = new JButton("Withdraw");
+		
+		accountNum = new JLabel("Account numebr: " + customer.getAccountNumber());
+		relatedAccs = new JLabel("Connected accounts: " + customer.getRelatedAccounts());
+		name = new JLabel("Name: " + customer.getFirstname());
+		lastname = new JLabel("Lastname: " + customer.getLastname());
+		
 		
 		deposit.addActionListener(new ActionListener() { 
 			@Override
@@ -57,12 +64,19 @@ public class Manager {
 			} 
 		});
 		
-		frame.add(masterLabel);
-		frame.add(entry);
-		frame.add(deposit);
-		frame.add(withdraw);
-		frame.add(balanceLabel);
+		frame.add(masterLabel); // row 1, pos 1
+		frame.add(entry); // row 1, pos 2
+		frame.add(deposit); // row 2, pos 1
+		frame.add(withdraw); // row 2, pos 2
+		frame.add(balanceLabel); // row 3, pos 1
+		frame.add(relatedAccs); // row 3, pos 2
+		frame.add(name); // row 4, pos 1
+		frame.add(lastname); // row 4, pos 2
+		frame.add(accountNum); // row 5, pos 1
+		frame.add(new JLabel("")); // row 5, pos 2
+		
 		frame.setVisible(true);
+		
 
 	}
 
