@@ -7,15 +7,19 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class Manager {
-
+	
+	public static boolean isNumeric(String str) {
+		  return str.matches("-?\\d+(\\.\\d+)?"); 
+	}
+	
 	public static void main(String[] args) {
 		
 		
-		JLabel masterLabel, balanceLabel, name,
-			   accountNum, relatedAccs, lastname;
+		JLabel masterLabel, balanceLabel, nameLabel,
+			   accountNum, relatedAccs, lastnameLabel;
 		
 		JTextField entry;
-		JButton deposit, withdraw;
+		JButton deposit, withdraw, changeAccountNumber;
 		
 		Account customer = new Account("CustomerFirst", "CustomerLast","CustAddress",
 				"CustCountry", "CustCity");
@@ -31,20 +35,52 @@ public class Manager {
 		entry = new JTextField();
 		deposit = new JButton("Deposit");
 		withdraw = new JButton("Withdraw");
+		changeAccountNumber = new JButton("Change Details");
 		
 		accountNum = new JLabel("Account numebr: " + customer.getAccountNumber());
 		relatedAccs = new JLabel("Connected accounts: " + customer.getRelatedAccounts());
-		name = new JLabel("Name: " + customer.getFirstname());
-		lastname = new JLabel("Lastname: " + customer.getLastname());
+		nameLabel = new JLabel("Name: " + customer.getFirstname());
+		lastnameLabel = new JLabel("Lastname: " + customer.getLastname());
 		
-		
+		changeAccountNumber.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String choice = JOptionPane.showInputDialog("Type 1 for name, 2 for lastname");
+				if (isNumeric(choice)){
+					int c = Integer.parseInt(choice);
+					if (c == 1){
+						String first = JOptionPane.showInputDialog("Choose a new name");
+						customer.setFirstname(first);
+						JOptionPane.showMessageDialog(null, "First name changed successfully");
+						nameLabel.setText(customer.getFirstname());
+					} else if (c == 2){
+						String last = JOptionPane.showInputDialog("Choose a new lastname");
+						customer.setLastname(last);
+						JOptionPane.showMessageDialog(null, "Lastname changed successfully");
+						lastnameLabel.setText(customer.getLastname());
+					} else {
+						JOptionPane.showMessageDialog(null, "Not able to process this request.");
+						return;
+					}
+					JOptionPane.showMessageDialog(null, "Operation Completed.");
+				} else {
+					JOptionPane.showMessageDialog(null, "Operation Cancelled.");
+				}
+			}
+			
+		});
 		deposit.addActionListener(new ActionListener() { 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String value = entry.getText();
-				customer.deposit(Double.parseDouble(value));
-				balanceLabel.setText("Balance: $" + customer.getAccountBalance()+"");
-				entry.setText("");
+				if (isNumeric(value)){
+					customer.deposit(Double.parseDouble(value));
+					balanceLabel.setText("Balance: $" + customer.getAccountBalance()+"");
+					entry.setText("");
+				} else {
+					entry.setText("");
+					JOptionPane.showMessageDialog(null, "Operation Cancelled.");
+				}
 			} 
 		});
 		
@@ -52,14 +88,19 @@ public class Manager {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String value = entry.getText();
-				customer.withdraw(Double.parseDouble(value));
-				if (customer.getAccountBalance() <= 0){
-					customer.setAccountBalance(0);
-					balanceLabel.setText("Balance: $" + customer.getAccountBalance());
-					entry.setText("");
+				if (isNumeric(value)){
+					customer.withdraw(Double.parseDouble(value));
+					if (customer.getAccountBalance() <= 0){
+						customer.setAccountBalance(0);
+						balanceLabel.setText("Balance: $" + customer.getAccountBalance());
+						entry.setText("");
+					} else {
+						balanceLabel.setText("Balance: $" + customer.getAccountBalance());
+						entry.setText("");
+					}
 				} else {
-					balanceLabel.setText("Balance: $" + customer.getAccountBalance());
 					entry.setText("");
+					JOptionPane.showMessageDialog(null, "Operation Cancelled.");
 				}
 			} 
 		});
@@ -70,11 +111,10 @@ public class Manager {
 		frame.add(withdraw); // row 2, pos 2
 		frame.add(balanceLabel); // row 3, pos 1
 		frame.add(relatedAccs); // row 3, pos 2
-		frame.add(name); // row 4, pos 1
-		frame.add(lastname); // row 4, pos 2
+		frame.add(nameLabel); // row 4, pos 1
+		frame.add(lastnameLabel); // row 4, pos 2
 		frame.add(accountNum); // row 5, pos 1
-		frame.add(new JLabel("")); // row 5, pos 2
-		
+		frame.add(changeAccountNumber); // row 5, pos 2
 		frame.setVisible(true);
 		
 
